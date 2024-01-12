@@ -1,0 +1,917 @@
+[
+    {
+        "id": "cac0e3c0cfa55859",
+        "type": "tab",
+        "label": "Metasys API",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8f0e287ca8029372",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "login - get token",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://192.168.0.21/api/v4/login",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "4a452e687b186f85",
+                "1db3d9a41bf6b896"
+            ]
+        ]
+    },
+    {
+        "id": "1f6dedb94db570fe",
+        "type": "trigger",
+        "z": "cac0e3c0cfa55859",
+        "name": "",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "-60",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "763de7a509730ca3"
+            ]
+        ]
+    },
+    {
+        "id": "4a452e687b186f85",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "token",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "779f4ab01a4786e6",
+        "type": "inject",
+        "z": "cac0e3c0cfa55859",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "1f6dedb94db570fe"
+            ]
+        ]
+    },
+    {
+        "id": "763de7a509730ca3",
+        "type": "change",
+        "z": "cac0e3c0cfa55859",
+        "name": "login details",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"username\":\"mssa_api\",\"password\":\"ChangeThisPASSWORD!\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "8f0e287ca8029372"
+            ]
+        ]
+    },
+    {
+        "id": "7059590411d407cf",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE5",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 200,
+        "y": 360,
+        "wires": [
+            [
+                "e3868446ac2a5a37"
+            ]
+        ]
+    },
+    {
+        "id": "1db3d9a41bf6b896",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "set token headers",
+        "func": "var token = JSON.parse(msg.payload);\nmsg.payload=token.accessToken;\nvar auth = 'Bearer ' + token.accessToken;\n\n//var head = auth;\n//head = head + token.accessToken; \n//msg.headers = {};\n//msg.headers['Authorization'] = head;\n//this bit above was a fail.. lets try another way.\nmsg.headers = {\n    \"Authorization\": auth\n}\nvar globalauth = {};\n\n//globalauth = 'Authorization : ' + auth;\nglobalauth = auth;\nglobal.set(\"auth\", globalauth) \nmsg.payload = 'Authorization : ' + auth;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 260,
+        "wires": [
+            [
+                "7059590411d407cf",
+                "c0be69d56ddbbbf5",
+                "00524ffb7ca41d77",
+                "bc4c539428a05eec",
+                "b63539e878cfcb0c",
+                "5bccee0dd6671c1d",
+                "c83db35e14e33ad8",
+                "d1a2d5f377227677",
+                "c9d4b28be1df13ac"
+            ]
+        ]
+    },
+    {
+        "id": "e3868446ac2a5a37",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "API Object response",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c0be69d56ddbbbf5",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "auth header",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "00524ffb7ca41d77",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get engine object ",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objects/59c5f9ce-a947-51d1-b436-1890e8258cb7?viewId=viewNameEnumSet.focusView&includeSchema=false",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "b5ee840d949b6528"
+            ]
+        ]
+    },
+    {
+        "id": "a9e406f8f355b246",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "engine object",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "b5ee840d949b6528",
+        "type": "json",
+        "z": "cac0e3c0cfa55859",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 510,
+        "y": 440,
+        "wires": [
+            [
+                "a9e406f8f355b246"
+            ]
+        ]
+    },
+    {
+        "id": "bc4c539428a05eec",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE1/BACnetIP.SHOP.OA-T",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 180,
+        "y": 540,
+        "wires": [
+            [
+                "ec6ecfbe943bd317"
+            ]
+        ]
+    },
+    {
+        "id": "12e9db966304e10d",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "login - get object",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 140,
+        "y": 660,
+        "wires": [
+            [
+                "7c083d59477de782",
+                "2e53c5980ce4c150"
+            ]
+        ]
+    },
+    {
+        "id": "ec6ecfbe943bd317",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"?viewId=focusView&includeSchema=false\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.payload = global.get(\"auth\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 560,
+        "wires": [
+            [
+                "12e9db966304e10d",
+                "5961896ed5be1fdf"
+            ]
+        ]
+    },
+    {
+        "id": "2c20e5b6e933caeb",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "json of OAT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.item",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "5961896ed5be1fdf",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "7c083d59477de782",
+        "type": "json",
+        "z": "cac0e3c0cfa55859",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 590,
+        "y": 660,
+        "wires": [
+            [
+                "2c20e5b6e933caeb"
+            ]
+        ]
+    },
+    {
+        "id": "e5e6fa3a1d2f56a2",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "OAT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "2e53c5980ce4c150",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "parse PV",
+        "func": "var pvo = JSON.parse(msg.payload);\nmsg.payload = pvo.item;\nvar msgout = { payload: msg.payload.presentValue }\nreturn msgout;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 760,
+        "wires": [
+            [
+                "e5e6fa3a1d2f56a2"
+            ]
+        ]
+    },
+    {
+        "id": "125746747f8fc0f2",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "put LAB V",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 120,
+        "y": 940,
+        "wires": [
+            [
+                "097a713a36d9a64b"
+            ]
+        ]
+    },
+    {
+        "id": "b63539e878cfcb0c",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE1/Programming.NodeRED.LAB-VOLTS",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 160,
+        "y": 820,
+        "wires": [
+            [
+                "570bf6ce72faee3d",
+                "ab5dc974691cb89a"
+            ]
+        ]
+    },
+    {
+        "id": "570bf6ce72faee3d",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\n\n//https://{hostname}/api/v4/objects/{objectId}/commands/adjustCommand\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/adjustCommand\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.headers['Content-Type'] = 'application / json';\n\n\nmsg.payload = { \"parameters\": [ global.get(\"lab.vac\") ], \"annotation\": \"Adj V from API.\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 880,
+        "wires": [
+            [
+                "125746747f8fc0f2"
+            ]
+        ]
+    },
+    {
+        "id": "097a713a36d9a64b",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "volt PUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "ab5dc974691cb89a",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "debug 9",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "9778db33bfaea449",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "put LAB kW",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 410,
+        "y": 1140,
+        "wires": [
+            [
+                "b4ab16cb60a596e1"
+            ]
+        ]
+    },
+    {
+        "id": "5bccee0dd6671c1d",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE1/Programming.NodeRED.LAB-POWER-YESTERDAY",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 140,
+        "y": 1020,
+        "wires": [
+            [
+                "eb68ab3e057eec53"
+            ]
+        ]
+    },
+    {
+        "id": "eb68ab3e057eec53",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\n\n//https://{hostname}/api/v4/objects/{objectId}/commands/adjustCommand\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/adjustCommand\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.headers['Content-Type'] = 'application / json';\n\n\nmsg.payload = { \"parameters\": [ global.get(\"power.yes\") ], \"annotation\": \"Adj V from API.\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1080,
+        "wires": [
+            [
+                "9778db33bfaea449"
+            ]
+        ]
+    },
+    {
+        "id": "b4ab16cb60a596e1",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "power PUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "d6bc013955c3da80",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "put LAB V",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 400,
+        "y": 1300,
+        "wires": [
+            [
+                "629bb5a5549f79ba"
+            ]
+        ]
+    },
+    {
+        "id": "c83db35e14e33ad8",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE1/Programming.NodeRED.CURRENT",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 140,
+        "y": 1180,
+        "wires": [
+            [
+                "5f4ee5b011d44665"
+            ]
+        ]
+    },
+    {
+        "id": "5f4ee5b011d44665",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\n\n//https://{hostname}/api/v4/objects/{objectId}/commands/adjustCommand\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/adjustCommand\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.headers['Content-Type'] = 'application / json';\n\n\nmsg.payload = { \"parameters\": [ global.get(\"load.current\") ], \"annotation\": \"Adj V from API.\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1240,
+        "wires": [
+            [
+                "d6bc013955c3da80"
+            ]
+        ]
+    },
+    {
+        "id": "629bb5a5549f79ba",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "current PUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "45881bd652594099",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "put SQL Historian Size",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 440,
+        "y": 1460,
+        "wires": [
+            [
+                "67db01642eea65c5"
+            ]
+        ]
+    },
+    {
+        "id": "d1a2d5f377227677",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE1/Programming.NodeRED.HISTORIANSIZE",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 140,
+        "y": 1340,
+        "wires": [
+            [
+                "4cb23e11b7197625"
+            ]
+        ]
+    },
+    {
+        "id": "4cb23e11b7197625",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\n\n//https://{hostname}/api/v4/objects/{objectId}/commands/adjustCommand\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/adjustCommand\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.headers['Content-Type'] = 'application / json';\n\n\nmsg.payload = { \"parameters\": [ global.get(\"hddsize\") ], \"annotation\": \"Adj V from API.\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1400,
+        "wires": [
+            [
+                "45881bd652594099",
+                "b9b0db2dbe01713d"
+            ]
+        ]
+    },
+    {
+        "id": "67db01642eea65c5",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "sqlhs PUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "d1eb4a1e7b0a12da",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "put SQL Disk Free",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 430,
+        "y": 1620,
+        "wires": [
+            [
+                "022d35884498f581"
+            ]
+        ]
+    },
+    {
+        "id": "c9d4b28be1df13ac",
+        "type": "http request",
+        "z": "cac0e3c0cfa55859",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE1/Programming.NodeRED.SQLDISKC",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 140,
+        "y": 1500,
+        "wires": [
+            [
+                "c6077dcd5002b99d"
+            ]
+        ]
+    },
+    {
+        "id": "c6077dcd5002b99d",
+        "type": "function",
+        "z": "cac0e3c0cfa55859",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\n\n//https://{hostname}/api/v4/objects/{objectId}/commands/adjustCommand\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/adjustCommand\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.headers['Content-Type'] = 'application / json';\n\n\nmsg.payload = { \"parameters\": [ global.get(\"diskfree\") ], \"annotation\": \"Adj V from API.\" }\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1560,
+        "wires": [
+            [
+                "d1eb4a1e7b0a12da"
+            ]
+        ]
+    },
+    {
+        "id": "022d35884498f581",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "SQL ds PUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "b9b0db2dbe01713d",
+        "type": "debug",
+        "z": "cac0e3c0cfa55859",
+        "name": "debug 14",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "fe2715d9715e7b93",
+        "type": "comment",
+        "z": "cac0e3c0cfa55859",
+        "name": "Notes",
+        "info": "Built for API v4\n\nModify your API user login within \"login details\".. remember to login once as that user and have them set as an API user w/in MSEA\nModify your login-get token for server details\nModify get object id by name for target SNE. \n\nNote there are a nunmber of pulls/pushs of data in here and note when I PUT data below it pulls it from a global variable (which I loaded in a different flow)\n\nWith the API we have to get a token, then add that token as an Authentication Bearer in the header per the api guidelines. Also modify your TLS settings for node-red (generate keys) ",
+        "x": 350,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "754a40eb71ef0a41",
+        "type": "tls-config",
+        "name": "",
+        "cert": "/home/myname/.node-red/certificate.pem",
+        "key": "/home/myname/.node-red/privatekey.pem",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
