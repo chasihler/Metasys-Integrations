@@ -1,0 +1,283 @@
+[
+    {
+        "id": "c0e3e1d61ecc2f41",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0f10fa24c35a15ed",
+        "type": "debug",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "json of HTG-C",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.item",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "82b7eae61c9cf2ee",
+        "type": "json",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 730,
+        "y": 240,
+        "wires": [
+            [
+                "0f10fa24c35a15ed"
+            ]
+        ]
+    },
+    {
+        "id": "a9b7303372992acb",
+        "type": "http request",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "login - get object",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 280,
+        "y": 240,
+        "wires": [
+            [
+                "82b7eae61c9cf2ee"
+            ]
+        ]
+    },
+    {
+        "id": "a53c9ecc41634c95",
+        "type": "function",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"?viewId=focusView&includeSchema=false\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.payload = global.get(\"auth\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 140,
+        "wires": [
+            [
+                "a9b7303372992acb"
+            ]
+        ]
+    },
+    {
+        "id": "6c9a1436cc361aeb",
+        "type": "http request",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "get object id by name",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "https://192.168.0.21/api/v4/objectIdentifiers?fqr=SB1ADX:SNE5/FC-1.AHU-2.HTG1-C",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 280,
+        "y": 120,
+        "wires": [
+            [
+                "a53c9ecc41634c95",
+                "288f7eb876222dea",
+                "af4c64e2f325caed"
+            ]
+        ]
+    },
+    {
+        "id": "288f7eb876222dea",
+        "type": "function",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "insert object id",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands\";\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.payload = global.get(\"auth\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 300,
+        "wires": [
+            [
+                "c918c0d2e39b89f1"
+            ]
+        ]
+    },
+    {
+        "id": "3fc94a1b0d65334e",
+        "type": "debug",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "htg commands",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c918c0d2e39b89f1",
+        "type": "http request",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "login - get object",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 540,
+        "y": 420,
+        "wires": [
+            [
+                "1923e47d6fb5026e"
+            ]
+        ]
+    },
+    {
+        "id": "1923e47d6fb5026e",
+        "type": "json",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 770,
+        "y": 420,
+        "wires": [
+            [
+                "3fc94a1b0d65334e"
+            ]
+        ]
+    },
+    {
+        "id": "27c0a80085b72185",
+        "type": "http request",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "cmd HTG On",
+        "method": "PUT",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "754a40eb71ef0a41",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 770,
+        "y": 580,
+        "wires": [
+            [
+                "8dcf33657a0c505e"
+            ]
+        ]
+    },
+    {
+        "id": "af4c64e2f325caed",
+        "type": "function",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "this was pain... ",
+        "func": "msg.payload = msg.payload.replace(/\"/g, \"\");\n\n//commandIdEnumSet.overrideCommand\n//msg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/commandIdEnumSet.overrideCommand\";\n\nvar cmd0 = \"commands/commandIdEnumSet.state0Command\"\nvar cmd1 = \"commands/commandIdEnumSet.state1Command\"\nvar cmdout = cmd0; \n\nif (global.get(\"LIGHT\") == 'On') { var cmdout = cmd1; }\n\n//Command Adjust\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/\" + cmdout;\n\n\n/*\n//Command Adjust\nmsg.url = \"https://192.168.0.21/api/v4/objects/\" + msg.payload + \"/commands/commandIdEnumSet.state1Command\";\n*/\n\nmsg.headers['Authorization'] = global.get(\"auth\");\nmsg.headers['Content-Type'] = 'application / json';\n\n//Override command\n//var j = \"{\\\"parameters\\\": [ 1 ],\\\"annotation\\\": \\\"From API\\\" }\" \n//msg.payload = j;\n\n//command adjust\nvar j = \"{\\\"properties\\\": [ 14 ],\\\"annotation\\\": \\\"From API\\\" }\"\nmsg.payload = j;\n\n\n\n//msg.payload = { \"parameters\": [\"'commandParmsEnumSet.valueCmdparm' : 'offonEnumSet.1'\"], \"annotation\": \"From API\" }\n//msg.payload = { \"valueCmdparm\": [\"state1Command\"], \"annotation\": \"From API\" }\n//commandParmsEnumSet.valueCmdparm\n//offonEnumSet.0\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 580,
+        "wires": [
+            [
+                "27c0a80085b72185",
+                "39deeb4cf09224d4"
+            ]
+        ]
+    },
+    {
+        "id": "8dcf33657a0c505e",
+        "type": "debug",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "output of command",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "39deeb4cf09224d4",
+        "type": "debug",
+        "z": "c0e3e1d61ecc2f41",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "754a40eb71ef0a41",
+        "type": "tls-config",
+        "name": "",
+        "cert": "/home/chas/.node-red/certificate.pem",
+        "key": "/home/chas/.node-red/privatekey.pem",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
